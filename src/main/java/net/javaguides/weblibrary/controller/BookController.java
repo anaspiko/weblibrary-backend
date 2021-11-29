@@ -28,8 +28,7 @@ public class BookController {
 	//get all books 
 	@GetMapping("/books")
 	public List<Book> getAllBooks() {
-		return bookRepository.findAll();
-		
+		return bookRepository.findAll();	
 	}
 	
 	//create book rest api
@@ -49,8 +48,15 @@ public class BookController {
 	
 	//update book rest api
 	@PutMapping("/books/{id}")
-	public ResponseEntity<Book> updateBook(@PathVariable Long id,@RequestBody Book book) {
+	public ResponseEntity<Book> updateBook(@PathVariable Long id, @RequestBody Book bookDetails) {
 		Book book = bookRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Book not exist id:" + id))
+				.orElseThrow(() -> new ResourceNotFoundException("Book not exist id :" + id));
+				
+				book.setBookName(bookDetails.getBookName());
+				book.setWriterName(bookDetails.getWriterName());
+				book.setYearIssue(bookDetails.getYearIssue());
+				
+				Book updatedBook = bookRepository.save(book);
+				return ResponseEntity.ok(updatedBook); 
 	}
 }
